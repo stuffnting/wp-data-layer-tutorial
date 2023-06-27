@@ -1,3 +1,6 @@
+/**
+ * WordPress dependencies
+ */
 import { Spinner, Button, TextControl } from "@wordpress/components";
 
 export function PageForm({
@@ -9,6 +12,12 @@ export function PageForm({
   onCancel,
   onSave,
 }) {
+  /**
+   * If there is an error, display it.
+   * The Save button is disabled if there are no edits, or a save is in progress.
+   * If there is a Save in progress, the save button gets a spinner.
+   * The Cancel button is disables if a save is in progress.
+   */
   return (
     <div className="my-gutenberg-form">
       <TextControl label="Page title:" value={title} onChange={onChangeTitle} />

@@ -1,10 +1,34 @@
+/**
+ * WordPress dependencies
+ */
 import { decodeEntities } from "@wordpress/html-entities";
 import { Spinner } from "@wordpress/components";
+import { store as coreDataStore } from "@wordpress/core-data";
+import { useSelect } from "@wordpress/data";
 
+/**
+ * Local dependencies
+ */
 import { EditPageButton } from "./edit-page-button";
 import { DeletePageButton } from "./delete-page-button";
 
-export function PagesList({ hasResolved, pages }) {
+export function PagesList({ searchTerm }) {
+  // Get the list of pages and determine if the fetch promise is resolved
+  const { pages, hasResolved } = useSelect(
+    (select) => {
+      const query = {};
+      if (searchTerm) {
+        query.search = searchTerm;
+      }
+      const selectorArgs = ["postType", "page", query];
+      return {
+        pages: select(coreDataStore).getEntityRecords(...selectorArgs),
+        hasResolved: select(coreDataStore).hasFinishedResolution("getEntityRecords", selectorArgs),
+      };
+    },
+    [searchTerm] // Each time searchTerm changes, this function re-runs
+  );
+
   if (!hasResolved) {
     return <Spinner />;
   }

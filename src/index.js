@@ -1,36 +1,28 @@
-import { useSelect } from "@wordpress/data";
+/**
+ * WordPress dependencies
+ */
 import { useState, createRoot } from "@wordpress/element";
-import { store as coreDataStore } from "@wordpress/core-data";
 import { SearchControl } from "@wordpress/components";
 
+/**
+ * Local dependencies
+ */
 import { PagesList } from "./pages-list";
 import { CreatePageButton } from "./create-page-button";
 import { Notifications } from "./notifications";
 
 function MyFirstApp() {
+  // Local state to deal with the search input field
   const [searchTerm, setSearchTerm] = useState("");
-  const { pages, hasResolved } = useSelect(
-    (select) => {
-      const query = {};
-      if (searchTerm) {
-        query.search = searchTerm;
-      }
-      const selectorArgs = ["postType", "page", query];
-      return {
-        pages: select(coreDataStore).getEntityRecords(...selectorArgs),
-        hasResolved: select(coreDataStore).hasFinishedResolution("getEntityRecords", selectorArgs),
-      };
-    },
-    [searchTerm]
-  );
 
+  // Basic app layout
   return (
     <div>
       <div className="list-controls">
         <SearchControl onChange={setSearchTerm} value={searchTerm} />
         <CreatePageButton />
       </div>
-      <PagesList hasResolved={hasResolved} pages={pages} />
+      <PagesList searchTerm={searchTerm} />
       <Notifications />
     </div>
   );

@@ -1,9 +1,16 @@
+/**
+ * WordPress dependencies
+ */
 import { useState } from "@wordpress/element";
 import { Button, Modal } from "@wordpress/components";
 
+/**
+ * Local dependencies
+ */
 import { CreatePageForm } from "./create-page-form";
 
 export function CreatePageButton() {
+  // Use local state for the modal status
   const [isOpen, setOpen] = useState(false);
   const openModal = () => setOpen(true);
   const closeModal = () => setOpen(false);

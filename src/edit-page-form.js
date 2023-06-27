@@ -1,6 +1,13 @@
+/**
+ * WordPress dependencies
+ */
 import { useSelect, useDispatch } from "@wordpress/data";
+// Equivalent as wp.data.select('core') and wp.data.dispatch('core')
 import { store as coreDataStore } from "@wordpress/core-data";
 
+/**
+ * Local dependencies
+ */
 import { PageForm } from "./page-form";
 
 export function EditPageForm({ pageId, onCancel, onSaveFinished }) {
@@ -15,15 +22,20 @@ export function EditPageForm({ pageId, onCancel, onSaveFinished }) {
     [pageId]
   );
 
-  // useDispatch with editEntityRecord to handle the change
-  const { editEntityRecord } = useDispatch(coreDataStore);
+  /**
+   * useDispatch with editEntityRecord to handle the change.
+   * editEntityRecord make changes locally, but does not send to API.
+   * The saveEditedEntityRecord dispatches the changes to the REST API.
+   */
+  const { editEntityRecord } = useDispatch(coreDataStore); // Equivalent to wp.data.dispatch('core').
   const handleChange = (title) => editEntityRecord("postType", "page", pageId, { title });
 
-  const { saveEditedEntityRecord } = useDispatch(coreDataStore);
+  // Deal with the actual saving of the changes
+  const { saveEditedEntityRecord } = useDispatch(coreDataStore); // Equivalent to wp.data.dispatch('core').
   const handleSave = async () => {
     // Wait for save promise to resolve and then close the modal
     const updatedRecord = await saveEditedEntityRecord("postType", "page", pageId);
-    // If there is an error don't close the modal
+    // Only when the save is successfully completed, close the modal
     if (updatedRecord) {
       onSaveFinished();
     }
